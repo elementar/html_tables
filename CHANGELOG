@@ -1,0 +1,7 @@
+0.0.2
+-----
+* Added `to_label` method for `NilClass` and `ActiveRecord::Base`.
+
+0.0.1
+-----
+* Initial version

@@ -2,6 +2,7 @@
 
 require 'html_tables/version'
 
+require 'html_tables/to_label'
 require 'html_tables/format_for_output'
 require 'html_tables/yielded_object'
 require 'html_tables/data_table'
