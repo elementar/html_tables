@@ -4,7 +4,7 @@ require File.expand_path('../lib/html_tables/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Fábio David Batista"]
   gem.email         = ["fabio@elementarsistemas.com.br"]
-  gem.description   = %q{Simple DSL for HTML data-tables}
+  gem.description   = %q{Simple DSL for HTML data tables}
   gem.summary       = %q{This gem was extracted from some projects on my company. Everyone is welcome to use and improve upon.}
   gem.homepage      = "http://elementarsistemas.com.br/"
 
