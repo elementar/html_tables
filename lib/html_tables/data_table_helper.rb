@@ -35,18 +35,33 @@ module HtmlTables
         end +
         content_tag(:tbody) do
           b = ''.html_safe
-          if collection.each do |item|
-            b << content_tag(:tr, t.row_options_for(item)) do
-              t.columns.map do |name, opts|
-                render_td(item, name, opts)
-              end.join.html_safe
+          rows = if options[:group]
+            collection.group_by {|i| options[:group][:proc].call(i) }.each do |g, l|
+              b << content_tag(:tr, class: 'group') do
+                content_tag(:th, capture(g, &options[:group][:block]), colspan: t.columns.size)
+              end
+              render_data_rows(b, l, t)
             end
-          end.size == 0 then
+            collection
+          else
+            render_data_rows(b, collection, t)
+          end
+          if rows.size == 0 then
             b << content_tag(:tr, class: 'nodata') do
               content_tag(:td, colspan: t.columns.size) { t.nodata_message }
             end unless t.nodata_message.nil?
           end
           b
+        end
+      end
+    end
+
+    def render_data_rows(b, collection, t)
+      collection.each do |item|
+        b << content_tag(:tr, t.row_options_for(item)) do
+          t.columns.map do |name, opts|
+            render_td(item, name, opts)
+          end.join.html_safe
         end
       end
     end

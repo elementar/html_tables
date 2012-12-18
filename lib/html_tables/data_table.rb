@@ -72,6 +72,18 @@ module HtmlTables
       h
     end
 
+    def group_by(column_or_lambda, &block)
+      options[:group] = { block: block, proc: case column_or_lambda
+        when String, Symbol
+          ->(obj) { obj.public_send(column_or_lambda) }
+        when Proc
+          column_or_lambda
+        else
+          raise ArgumentError.new "group_by first argument must be a String, Symbol or Proc"
+      end }
+      self
+    end
+
     def test(item)
       yield item
     end

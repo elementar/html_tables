@@ -21,6 +21,8 @@ Or install it yourself as:
 HAML example:
 
     = data_table_for(@products, name: :products_table) do |t|
+      - t.group_by(:category) do |cat|
+        %em= cat.name
       - t.column(:code, align: :center, width: '9em')
       - t.column(:description) { |p| p.descriptions.first }
       - t.column(:pricing)

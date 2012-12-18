@@ -27,6 +27,11 @@ module HtmlTables
       nil
     end
 
+    def group_by(column_or_lambda, &block)
+      t.group_by column_or_lambda, &block
+      self
+    end
+
     # Sets the 'no-data' message. If not set, no message will be displayed when there's no records to show.
     def nodata(msg)
       t.nodata_message = msg
