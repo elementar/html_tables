@@ -91,8 +91,8 @@ module HtmlTables
       elsif opts[:block]
         capture(item, &opts[:block])
       else
-        tmp = item.send(column)
-        tmp = item.send("#{column}_text") rescue tmp if tmp.is_a?(Symbol)
+        tmp = item.public_send(column)
+        tmp = item.public_send("#{column}_text") rescue tmp if tmp.is_a?(Symbol)
         tmp
       end
 
