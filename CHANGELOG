@@ -1,3 +1,9 @@
+0.0.5
+-----
+* New option for checkboxes: `checked`.
+* New option for checkboxes and radio: `value_method`.
+* Changed `#send` calls for `#public_send`.
+
 0.0.4
 -----
 * Added support for groups.
