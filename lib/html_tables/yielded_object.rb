@@ -10,12 +10,18 @@ module HtmlTables
 
     # Adds a checkbox column to the DataTable.
     # If a block is supplied, it is used to determine the initial state of the checkbox.
+    # @param [Hash] options the checkbox options
+    # @option options [TrueClass,FalseClass] checked the initial state of the checkbox.
+    # @option options [Proc] block a block which will be evaluated to define the initial state of the checkbox.
+    # @option options [String] value_method the method to be called to define the checkbox value. Default = :id
     def checkbox(id = nil, options = { }, &block)
       options[:block] = block if block_given?
       t.columns[id] = options.reverse_merge! checkbox: true, align: :center
     end
 
     # Adds a radio button column to the DataTable.
+    # @param [Hash] options the radio options
+    # @option options [String] value_method the method to be called to define the radio value. Default = :id
     def radio(id = nil, options = { })
       t.columns[id] = options.reverse_merge! radio: true, align: :center
     end

@@ -82,12 +82,11 @@ module HtmlTables
       end
 
       v = if opts[:checkbox]
-        checked = nil
+        checked = opts[:checked]
         checked = opts[:block].call(item) if opts[:block]
-        ck_opts = opts.select { |k, _| [:disabled].include?(k) }
-        check_box_tag "#{column}[]", item.id, checked, ck_opts
+        check_box_tag "#{column}[]", item.public_send(opts.fetch(:value_method, :id)), checked, extract_check_box_tag_options(opts)
       elsif opts[:radio]
-        radio_button_tag "#{column}[]", item.id
+        radio_button_tag "#{column}[]", item.public_send(opts.fetch(:value_method, :id))
       elsif opts[:block]
         capture(item, &opts[:block])
       else
@@ -114,6 +113,11 @@ module HtmlTables
       v = ''.html_safe << btn << v if btn
 
       content_tag(:td, v, td_options)
+    end
+
+    def extract_check_box_tag_options(opts)
+      valid_options = [:disabled]
+      opts.select { |k, _| valid_options.include?(k) }
     end
   end
 end
