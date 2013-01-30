@@ -20,7 +20,7 @@ Or install it yourself as:
 
 HAML example:
 
-    = data_table_for(@products, name: :products_table) do |t|
+    = data_table_for(@products, name: :products_table, html: { class: 'custom_table' }) do |t|
       - t.group_by(:category) do |cat|
         %em= cat.name
       - t.column(:code, align: :center, width: '9em')
