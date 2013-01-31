@@ -14,7 +14,7 @@ module HtmlTables
       cls << 'table-condensed' if options[:condensed]
       cls << options[:class] if options[:class]
       table_html_options = { class: cls }
-      table_html_options.merge!(options[:html]) { |_, v1, v2| [v1, v2].flatten }
+      table_html_options.merge!(options[:html]) { |_, v1, v2| [v1, v2].flatten } if options[:html]
       content_tag(:table, table_html_options) do
         content_tag(:caption, options[:caption] || controller_name, class: ('hidden' unless options[:caption])) +
         content_tag(:colgroup) do
