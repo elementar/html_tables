@@ -52,7 +52,7 @@ module HtmlTables
     end
 
     def url_for(item)
-      return nil unless item_url_options[:enabled]
+      return nil if item_url_options.fetch(:enabled, true)
       return item_url_options[:block].call(item) if item_url_options[:block]
       @builder.url_for(item) rescue nil
     end
