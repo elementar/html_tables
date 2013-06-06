@@ -5,10 +5,11 @@ module HtmlTables
     attr_reader :collection, :options, :row_classes
     attr_accessor :nodata_message, :item_url_options
 
-    def initialize(builder, collection, options = { })
+    def initialize(builder, collection, options = {})
       @builder = builder
       @collection = collection
       @options = options
+      @item_url_options = {}
       @row_classes = []
     end
 
@@ -57,7 +58,7 @@ module HtmlTables
     end
 
     def row_options_for(item)
-      h = { }
+      h = {}
 
       url = self.url_for(item)
       h[:data] = { url: url } if url
