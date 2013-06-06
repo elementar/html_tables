@@ -44,8 +44,8 @@ module HtmlTables
       nil
     end
 
-    def item_url(&block)
-      t.item_url_block = block
+    def item_url(enabled = true, &block)
+      t.item_url_options = { :block => block, :enabled => enabled }
       nil
     end
 

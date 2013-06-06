@@ -3,7 +3,7 @@
 module HtmlTables
   class DataTable
     attr_reader :collection, :options, :row_classes
-    attr_accessor :nodata_message, :item_url_block
+    attr_accessor :nodata_message, :item_url_options
 
     def initialize(builder, collection, options = { })
       @builder = builder
@@ -51,7 +51,9 @@ module HtmlTables
     end
 
     def url_for(item)
-      (item_url_block.call(item) unless item_url_block.nil?) || @builder.url_for(item) rescue nil
+      return nil unless item_url_options[:enabled]
+      return item_url_options[:block].call(item) if item_url_options[:block]
+      @builder.url_for(item) rescue nil
     end
 
     def row_options_for(item)
