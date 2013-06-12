@@ -21,9 +21,18 @@ module HtmlTables
     end
 
     def model
-      @model ||= collection.model_name.constantize if collection.respond_to?(:model_name)
+      @model ||= begin
+        n = collection.model_name.constantize if collection.respond_to?(:model_name)
+        n = n.name if n.is_a?(ActiveModel::Name)
+        n
+      end
       @model ||= collection.first.try(:class)
       @model ||= options[:name].to_s.singularize.constantize
+    end
+
+    def model_name
+      @model_name ||= collection.model_name if collection.respond_to?(:model_name)
+      @model_name ||= model.model_name
     end
 
     def model_columns
@@ -44,7 +53,7 @@ module HtmlTables
       return @builder.content_tag(:i, nil, class: 'icon-check') if columns[column_id][:checkbox]
       v ||= I18n.t(column_id, scope: [:tables, options[:name] || :default], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:tables, :default], raise: true) rescue nil
-      v ||= I18n.t(column_id, scope: [:activerecord, :attributes, model.model_name.underscore], raise: true) rescue nil
+      v ||= I18n.t(column_id, scope: [:activerecord, :attributes, model_name.underscore], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:attributes], raise: true) rescue nil
       v ||= model_columns[column_id].human_name rescue nil
 
