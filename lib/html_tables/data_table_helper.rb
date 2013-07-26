@@ -3,6 +3,8 @@
 module HtmlTables
   module DataTableHelper
     def data_table_for(collection, options = {})
+      config = HtmlTables::Configuration.instance
+
       t = DataTable.new(self, collection, options)
       if block_given?
         yield t.object_to_yield
@@ -10,7 +12,7 @@ module HtmlTables
         t.auto_generate_columns!
       end
 
-      cls = %w(table table-striped table-bordered)
+      cls = config.default_table_classes.dup
       cls << 'table-condensed' if options[:condensed]
       cls << options[:class] if options[:class]
       table_html_options = { class: cls }
@@ -98,9 +100,9 @@ module HtmlTables
         tmp
       end
 
-      if ::Rails.env.development? && v.is_a?(ActiveRecord::Base)
+      if config.use_entity_shortcuts && v.is_a?(ActiveRecord::Base)
         btn = content_tag(:div, class: 'entity-shortcut') do
-          link_to(url_for(v), class: 'btn btn-small') do
+          link_to(config.url_generator_proc.(v), class: 'btn btn-small') do
             content_tag(:i, nil, class: 'icon-share')
           end
         end rescue nil

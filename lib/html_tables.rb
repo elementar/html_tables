@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'html_tables/version'
+require 'html_tables/config'
 
 require 'html_tables/to_label'
 require 'html_tables/format_for_output'
