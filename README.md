@@ -26,6 +26,8 @@ HAML example:
       - t.column(:code, align: :center, width: '9em')
       - t.column(:description) { |p| p.descriptions.first }
       - t.column(:pricing)
+      - t.footer(:pricing, reduce: :+) do |total|
+        = number_to_currency(total)
       - t.column(:quantity, width: '9em') do |p|
         - if p.quantity == 0
           %span.label.label-important.stack-right(title = 'Out of stock')
