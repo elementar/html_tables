@@ -38,6 +38,14 @@ module HtmlTables
       self
     end
 
+    def footer(id, options = {}, &block)
+      f = {}
+      f[:map] = options.delete(:map) || id.to_sym.to_proc
+      f[:reduce] = options.delete(:reduce) || :+
+      f[:format] = block if block_given?
+      t.columns[id][:footer] = f
+    end
+
     # Sets the 'no-data' message. If not set, no message will be displayed when there's no records to show.
     def nodata(msg)
       t.nodata_message = msg
