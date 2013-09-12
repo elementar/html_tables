@@ -25,8 +25,11 @@ HAML example:
         %em= cat.name
       - t.column(:code, align: :center, width: '9em')
       - t.column(:description) { |p| p.descriptions.first }
-      - t.column(:pricing, footer: :sum) do |item, total|
-        = number_to_currency(total)
+      - t.column(:pricing, footer: :sum) do |item, total_in_footer|
+        - if item
+          = number_to_currency(item.pricing)
+        - else
+          blink = number_to_currency(total_in_footer)
       - t.column(:quantity, width: '9em') do |p|
         - if p.quantity == 0
           %span.label.label-important.stack-right(title = 'Out of stock')
