@@ -42,7 +42,7 @@ module HtmlTables
       f = {}
       f[:map] = options.delete(:map) || id.to_sym.to_proc
       f[:reduce] = options.delete(:reduce) || :+
-      f[:format] = block if block_given?
+      f[:format] = block_given? ? block : :to_s.to_proc
       t.columns[id][:footer] = f
     end
 

@@ -57,11 +57,21 @@ module HtmlTables
     end
 
     def tfoot
-      # content_tag(:tfoot) do
-      #   content_tag(:tr) do
-      #     content_tag(:th, 'TFOOT', colspan: t.columns.size)
-      #   end
-      # end
+      footers = t.columns.map { |_, opts| opts[:footer] }
+      return ''.html_safe unless footers.any?
+
+      content_tag(:tfoot) do
+        content_tag(:tr) do
+          footers.map do |opts|
+            if opts.nil?
+              content_tag(:th)
+            else
+              value = collection.map(&opts[:map]).reduce(&opts[:reduce])
+              content_tag(:th, capture(value, &opts[:format]))
+            end
+          end.join.html_safe
+        end
+      end
     end
 
     def tbody
