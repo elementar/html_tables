@@ -27,7 +27,7 @@ module HtmlTables
     end
 
     # Adds a regular column to the DataTable.
-    def column(id, options = { }, &block)
+    def column(id, options = {}, &block)
       options[:block] = block if block_given?
       t.columns[id] = options
       nil
@@ -36,14 +36,6 @@ module HtmlTables
     def group_by(column_or_lambda, &block)
       t.group_by column_or_lambda, &block
       self
-    end
-
-    def footer(id, options = {}, &block)
-      f = {}
-      f[:map] = options.delete(:map) || id.to_sym.to_proc
-      f[:reduce] = options.delete(:reduce) || :+
-      f[:format] = block_given? ? block : :to_s.to_proc
-      t.columns[id][:footer] = f
     end
 
     # Sets the 'no-data' message. If not set, no message will be displayed when there's no records to show.

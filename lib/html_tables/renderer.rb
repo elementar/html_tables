@@ -57,17 +57,23 @@ module HtmlTables
     end
 
     def tfoot
-      footers = t.columns.map { |_, opts| opts[:footer] }
-      return ''.html_safe unless footers.any?
+      return ''.html_safe unless t.columns.any? { |_, c| c.has_key?(:footer) }
 
       content_tag(:tfoot) do
         content_tag(:tr) do
-          footers.map do |opts|
-            if opts.nil?
-              content_tag(:th)
+          t.columns.map do |id, opts|
+            if opts.has_key?(:footer)
+              value =
+                case opts[:footer]
+                when Symbol
+                  collection.map(&id.to_proc).public_send(opts[:footer])
+                when Proc
+                  opts[:footer].call(collection)
+                end
+
+              content_tag(:th, capture(nil, value, &opts[:block]))
             else
-              value = collection.map(&opts[:map]).reduce(&opts[:reduce])
-              content_tag(:th, capture(value, &opts[:format]))
+              content_tag(:th)
             end
           end.join.html_safe
         end
@@ -132,7 +138,8 @@ module HtmlTables
       elsif opts[:radio]
         radio_button_tag "#{column}[]", item.public_send(opts.fetch(:value_method, :id))
       elsif opts[:block]
-        capture(item, &opts[:block])
+        args = [item, nil].first(opts[:block].arity)
+        capture(*args, &opts[:block])
       else
         tmp = item.public_send(column)
         tmp = item.public_send("#{column}_text") rescue tmp if tmp.is_a?(Symbol)

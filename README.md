@@ -25,8 +25,7 @@ HAML example:
         %em= cat.name
       - t.column(:code, align: :center, width: '9em')
       - t.column(:description) { |p| p.descriptions.first }
-      - t.column(:pricing)
-      - t.footer(:pricing, reduce: :+) do |total|
+      - t.column(:pricing, footer: :sum) do |item, total|
         = number_to_currency(total)
       - t.column(:quantity, width: '9em') do |p|
         - if p.quantity == 0
