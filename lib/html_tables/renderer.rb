@@ -24,7 +24,7 @@ module HtmlTables
     private
 
     attr_reader :t, :collection, :options, :config
-    delegate :content_tag, :capture, to: :@helper
+    delegate :content_tag, :check_box_tag, :capture, to: :@helper
 
     def caption
       return ''.html_safe unless options.has_key?(:caption)
@@ -70,8 +70,8 @@ module HtmlTables
                 when Proc
                   opts[:footer].call(collection)
                 end
-
-              content_tag(:th, capture(nil, value, &opts[:block]))
+              content = opts[:block] ? capture(nil, value, &opts[:block]) : value.to_s
+              content_tag(:th, content, extract_td_options(opts))
             else
               content_tag(:th)
             end
@@ -117,20 +117,6 @@ module HtmlTables
     end
 
     def render_td(item, column, opts)
-      td_options = {}
-
-      if opts[:align] == :center
-        td_options[:class] = 'c'
-      end
-
-      if opts[:title]
-        td_options[:title] = if opts[:title].respond_to?(:call)
-          opts[:title].call(item)
-        else
-          opts[:title].to_s
-        end
-      end
-
       v = if opts[:checkbox]
         checked = opts[:checked]
         checked = opts[:block].call(item) if opts[:block]
@@ -163,12 +149,27 @@ module HtmlTables
 
       v = ''.html_safe << btn << v if btn
 
-      content_tag(:td, v, td_options)
+      content_tag(:td, v, extract_td_options(opts))
     end
 
     def extract_check_box_tag_options(opts)
       valid_options = [:disabled]
       opts.select { |k, _| valid_options.include?(k) }
+    end
+
+    def extract_td_options(opts)
+      retval = {}
+      retval[:class] = 'c' if opts[:align] == :center
+
+      if opts[:title]
+        retval[:title] = if opts[:title].respond_to?(:call)
+          opts[:title].call(item)
+        else
+          opts[:title].to_s
+        end
+      end
+
+      retval
     end
   end
 end
