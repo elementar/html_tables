@@ -71,7 +71,7 @@ module HtmlTables
                   opts[:footer].call(collection)
                 end
               content = opts[:block] ? capture(nil, value, &opts[:block]) : value.to_s
-              content_tag(:th, content, extract_td_options(opts))
+              content_tag(:th, content, extract_td_options(opts, nil))
             else
               content_tag(:th)
             end
@@ -149,7 +149,7 @@ module HtmlTables
 
       v = ''.html_safe << btn << v if btn
 
-      content_tag(:td, v, extract_td_options(opts))
+      content_tag(:td, v, extract_td_options(opts, item))
     end
 
     def extract_check_box_tag_options(opts)
@@ -157,15 +157,15 @@ module HtmlTables
       opts.select { |k, _| valid_options.include?(k) }
     end
 
-    def extract_td_options(opts)
+    def extract_td_options(opts, item)
       retval = {}
       retval[:class] = 'c' if opts[:align] == :center
 
       if opts[:title]
         retval[:title] = if opts[:title].respond_to?(:call)
-          opts[:title].call(item)
+          opts[:title].call(item).format_for_output
         else
-          opts[:title].to_s
+          opts[:title].format_for_output
         end
       end
 
