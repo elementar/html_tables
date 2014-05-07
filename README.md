@@ -18,11 +18,11 @@ Or install it yourself as:
 
 ## Usage
 
-HAML example:
+Slim example:
 
     = data_table_for(@products, name: :products_table, html: { class: 'custom_table' }) do |t|
       - t.group_by(:category) do |cat|
-        %em= cat.name
+        em= cat.name
       - t.column(:code, align: :center, width: '9em')
       - t.column(:description) { |p| p.descriptions.first }
       - t.column(:pricing, footer: :sum) do |item, total_in_footer|
@@ -32,11 +32,10 @@ HAML example:
           blink = number_to_currency(total_in_footer)
       - t.column(:quantity, width: '9em') do |p|
         - if p.quantity == 0
-          %span.label.label-important.stack-right(title = 'Out of stock')
-            %i.icon-flag.icon-white
+          span title='Out of stock' *
         - else
-          .c= number_with_delimiter p.quantity
-      - t.column(:situation, align: :center, width: '9em')
+          = number_with_delimiter p.quantity
+      - t.column(:status, align: :center, width: '3em', header: { text: 'St.', class: 'status-header' })
       - t.nodata 'No product found.'
 
 ## Contributing

@@ -49,7 +49,6 @@ module HtmlTables
 
     def header_for(column_id)
       return nil if column_id.nil?
-      return columns[column_id][:header] if columns[column_id][:header]
       return @builder.content_tag(:i, nil, class: 'icon-check') if columns[column_id][:checkbox]
       v ||= I18n.t(column_id, scope: [:tables, options[:name] || :default], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:tables, :default], raise: true) rescue nil

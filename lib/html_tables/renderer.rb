@@ -47,10 +47,13 @@ module HtmlTables
       content_tag(:thead) do
         content_tag(:tr) do
           t.columns.map do |name, opts|
-            header_opts = {}
-            header_opts[:class] = 'check' if opts[:checkbox]
-            header_opts[:header_title] = opts[:header_title] if opts[:header_title]
-            content_tag(:th, t.header_for(name), header_opts)
+            header_opts = opts.fetch(:header, {})
+            header_opts = { text: header_opts } unless header_opts.is_a?(Hash)
+            header_opts[:text] ||= opts[:header_title] if opts[:header_title]
+            (header_opts[:class] ||= '') << ' check' if opts[:checkbox]
+
+            header_text = header_opts.delete(:text) { t.header_for(name) }
+            content_tag(:th, header_text, header_opts)
           end.join.html_safe
         end
       end
