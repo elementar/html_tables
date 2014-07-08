@@ -3,11 +3,10 @@
 module HtmlTables
   module FormatForOutput
     def format_for_output
+      return to_label(:short) if respond_to?(:to_label)
       case self
         when Date, Time, DateTime
           I18n.l(self, format: :short)
-        when ActiveRecord::Base
-          self.to_label(:short)
         when TrueClass, FalseClass
           I18n.t(self.to_s)
         else

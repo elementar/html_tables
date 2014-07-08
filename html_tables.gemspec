@@ -18,5 +18,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'i18n'
   gem.add_dependency 'actionpack'
   gem.add_dependency 'railties'
-  gem.add_dependency 'activerecord'
 end

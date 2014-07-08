@@ -10,7 +10,7 @@ module ToLabel
   end
 end
 
-ActiveRecord::Base.send(:include, ToLabel)
+ActiveRecord::Base.send(:include, ToLabel) if defined? ActiveRecord::Base
 
 class NilClass
   def to_label(*args)

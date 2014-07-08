@@ -135,7 +135,7 @@ module HtmlTables
         tmp
       end
 
-      if config.use_entity_shortcuts && v.is_a?(ActiveRecord::Base)
+      if config.use_entity_shortcuts && v.class.name == 'ActiveRecord::Base'
         btn = content_tag(:div, class: 'entity-shortcut') do
           link_to(config.url_generator_proc.(v), class: 'btn btn-small') do
             content_tag(:i, nil, class: 'icon-share')
