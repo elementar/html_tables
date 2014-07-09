@@ -52,8 +52,8 @@ module HtmlTables
       return @builder.content_tag(:i, nil, class: 'icon-check') if columns[column_id][:checkbox]
       v ||= I18n.t(column_id, scope: [:tables, options[:name] || :default], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:tables, :default], raise: true) rescue nil
-      v ||= I18n.t(column_id, scope: [:activerecord, :attributes, model_name.underscore], raise: true) rescue nil
-      v ||= I18n.t(column_id, scope: [:mongoid, :attributes, model_name.underscore], raise: true) rescue nil
+      v ||= I18n.t(column_id, scope: [:activerecord, :attributes, model_name.i18n_key], raise: true) rescue nil
+      v ||= I18n.t(column_id, scope: [:mongoid, :attributes, model_name.i18n_key], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:attributes], raise: true) rescue nil
       v ||= model_columns[column_id].human_name rescue nil
 
