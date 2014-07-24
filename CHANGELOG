@@ -1,4 +1,4 @@
-0.2.2
+0.2.3
 -----
 * Better support for enum gems: simple_enum and Symbolize for now.
 
