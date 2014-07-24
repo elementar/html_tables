@@ -1,3 +1,12 @@
+0.2.2
+-----
+* Better support for enum gems: simple_enum and Symbolize for now.
+
+0.2.0
+-----
+* Removed ActiveRecord runtime dependency.
+* Some fixes for Mongoid compatibility.
+
 0.0.6
 -----
 * Added support for `:html` option.
