@@ -131,7 +131,14 @@ module HtmlTables
         capture(*args, &opts[:block])
       else
         tmp = item.public_send(column)
-        tmp = item.public_send("#{column}_text") rescue tmp if tmp.is_a?(Symbol)
+        if tmp.is_a?(Symbol)
+          # tries common symbol-storing libraries
+          if item.respond_to?(:human_enum_name) # simple_enum
+            tmp = item.human_enum_name(column, tmp)
+          elsif item.respond_to?(:"#{column}_text") # symbolize
+            tmp = item.public_send("#{column}_text")
+          end
+        end
         tmp
       end
 
