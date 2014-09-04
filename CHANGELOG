@@ -1,3 +1,7 @@
+0.2.4
+-----
+* Fixed a conflict when the same class have Symbolize and SimpleEnum fields.
+
 0.2.3
 -----
 * Better support for enum gems: simple_enum and Symbolize for now.
