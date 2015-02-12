@@ -49,7 +49,7 @@ module HtmlTables
 
     def header_for(column_id)
       return nil if column_id.nil?
-      return @builder.content_tag(:i, nil, class: 'icon-check') if columns[column_id][:checkbox]
+      return @builder.content_tag(:i, nil, class: 'fa fa-check-square-o') if columns[column_id][:checkbox]
       v ||= I18n.t(column_id, scope: [:tables, options[:name] || :default], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:tables, :default], raise: true) rescue nil
       v ||= I18n.t(column_id, scope: [:activerecord, :attributes, model_name.i18n_key], raise: true) rescue nil
