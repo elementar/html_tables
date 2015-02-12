@@ -1,3 +1,7 @@
+0.2.5
+-----
+* Changed the checkbox icon to font-awesome (@zekisan).
+
 0.2.4
 -----
 * Fixed a conflict when the same class have Symbolize and SimpleEnum fields.
