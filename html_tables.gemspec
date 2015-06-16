@@ -18,4 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'i18n'
   gem.add_dependency 'actionpack'
   gem.add_dependency 'railties'
+
+  gem.add_development_dependency 'rspec', '~> 3.0'
+  gem.add_development_dependency 'rspec-html-matchers'
 end

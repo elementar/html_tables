@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+require 'active_support'
+require 'action_view'
+
 require 'html_tables/version'
 require 'html_tables/config'
 

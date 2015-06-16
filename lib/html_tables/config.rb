@@ -11,7 +11,7 @@ module HtmlTables
     attr_accessor :use_entity_shortcuts, :url_generator_proc, :default_table_classes
 
     def initialize
-      @use_entity_shortcuts = ::Rails.env.development?
+      @use_entity_shortcuts = ENV['RAILS_ENV'] == 'development'
       @url_generator_proc = -> obj { url_for(obj) }
       @default_table_classes = %w(table table-striped table-bordered)
     end

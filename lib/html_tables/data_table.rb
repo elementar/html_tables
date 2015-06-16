@@ -14,6 +14,8 @@ module HtmlTables
     end
 
     def auto_generate_columns!
+      raise 'Could not auto generate columns' unless model.respond_to? :accessible_attributes
+
       model.accessible_attributes.each do |attr|
         col = model_columns[attr]
         object_to_yield.column col.name unless col.nil?
@@ -23,7 +25,7 @@ module HtmlTables
     def model
       @model ||= begin
         n = collection.model_name.constantize if collection.respond_to?(:model_name)
-        n = n.name if n.is_a?(ActiveModel::Name)
+        n = n.name if (defined? ActiveModel) && n.is_a?(ActiveModel::Name)
         n
       end
       @model ||= collection.first.try(:class)
