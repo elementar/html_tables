@@ -7,7 +7,8 @@ end
 
 RSpec.describe HtmlTables::DataTable do
   let(:col0) { [] }
-  let(:col1) { [{ id: 1, name: 'Record One' }, { id: 2, name: 'Record Two' }].map &OpenStruct.method(:new) }
+  let(:col1) { [{ id: 1, name: 'Record One', enabled: true },
+                { id: 2, name: 'Record Two', enabled: false }].map &OpenStruct.method(:new) }
   let(:builder) { FakeBuilder.new }
 
   describe 'basic usage' do
@@ -19,9 +20,8 @@ RSpec.describe HtmlTables::DataTable do
       end
 
       expect(html).to have_tag :tbody do
-        with_tag :tr, count: 1 do
-          with_tag :td, text: 'No records found', with: { colspan: 2 }
-        end
+        with_tag :tr, count: 1
+        with_tag :td, count: 1, text: 'No records found', with: { colspan: 2 }
       end
     end
 
@@ -34,14 +34,23 @@ RSpec.describe HtmlTables::DataTable do
 
       expect(html).not_to have_tag :td, text: 'No records found'
       expect(html).to have_tag :tbody do
-        with_tag :tr do
-          with_tag :td, text: '1'
-          with_tag :td, text: 'Record One'
-        end
-        with_tag :tr do
-          with_tag :td, text: '2'
-          with_tag :td, text: 'Record Two'
-        end
+        with_tag :tr, text: 'Record One'
+        with_tag :tr, text: 'Record Two'
+      end
+    end
+  end
+
+  describe 'row class' do
+    it 'should add the row class on the correct rows' do
+      html = builder.data_table_for col1 do |t|
+        t.row_class :disabled, if: -> rec { !rec.enabled }
+        t.column :id
+        t.column :name
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :tr, without: { class: 'disabled' }, text: 'Record One'
+        with_tag :tr, with: { class: 'disabled' }, text: 'Record Two'
       end
     end
   end
