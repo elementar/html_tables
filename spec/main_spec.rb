@@ -1,5 +1,25 @@
 require 'spec_helper'
 require 'ostruct'
+require 'active_record'
+require 'enumerize'
+
+silence_warnings do
+  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.logger = Logger.new(nil)
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+end
+
+ActiveRecord::Base.connection.instance_eval do
+  create_table :users do |t|
+    t.string :sex
+  end
+end
+
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  enumerize :sex, :in => [:male, :female]
+end
 
 class FakeBuilder < ActionView::Base
   include HtmlTables::DataTableHelper
@@ -36,6 +56,19 @@ RSpec.describe HtmlTables::DataTable do
       expect(html).to have_tag :tbody do
         with_tag :tr, text: 'Record One'
         with_tag :tr, text: 'Record Two'
+      end
+    end
+
+    it 'should translate values from enumerize' do
+      User.create(sex: :female)
+      collection = User.all
+      html = builder.data_table_for collection do |t|
+        t.column :sex
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: 'Feminino'
       end
     end
   end
