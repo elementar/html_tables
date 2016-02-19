@@ -70,6 +70,19 @@ RSpec.describe HtmlTables::DataTable do
       end
     end
 
+    it 'should show empty cell for empty enumerize field' do
+      user_collection.first.update(sex: nil)
+      updated_collection = user_collection
+      html = builder.data_table_for updated_collection do |t|
+        t.column :sex
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: ''
+      end
+    end
+
     it 'should translate values from symbolize' do
       html = builder.data_table_for user_collection do |t|
         t.column :role
