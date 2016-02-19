@@ -1,6 +1,5 @@
 *.gem
 *.rbc
-.*
 Gemfile.lock
 InstalledFiles
 _yardoc
