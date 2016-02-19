@@ -1,5 +1,8 @@
 require 'html_tables'
 require 'rspec-html-matchers'
+require 'active_record'
+require 'enumerize'
+require 'symbolize/active_record'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

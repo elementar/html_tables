@@ -1,7 +1,5 @@
 require 'spec_helper'
 require 'ostruct'
-require 'active_record'
-require 'enumerize'
 
 silence_warnings do
   ActiveRecord::Migration.verbose = false
@@ -12,13 +10,16 @@ end
 ActiveRecord::Base.connection.instance_eval do
   create_table :users do |t|
     t.string :sex
+    t.string :role
   end
 end
 
 class User < ActiveRecord::Base
   extend Enumerize
+  include Symbolize::ActiveRecord
 
   enumerize :sex, :in => [:male, :female]
+  symbolize :role, :in => [:manager, :admin]
 end
 
 class FakeBuilder < ActionView::Base
@@ -26,10 +27,23 @@ class FakeBuilder < ActionView::Base
 end
 
 RSpec.describe HtmlTables::DataTable do
+
+  before do
+    I18n.config.enforce_available_locales = false
+    I18n.available_locales = ["pt"]
+    I18n.default_locale = :"pt"
+    I18n.backend.store_translations(:pt, :enumerize => { :user => { :sex => {
+        :female => 'Feminino', :male => 'Masculino'
+    } } },
+     :activerecord => { :symbolizes => { :user => { :role => { :manager => 'Gerente', :admin => 'Administrador' } } } })
+    User.create(sex: :female, role: :manager)
+  end
+
   let(:col0) { [] }
   let(:col1) { [{ id: 1, name: 'Record One', enabled: true },
                 { id: 2, name: 'Record Two', enabled: false }].map &OpenStruct.method(:new) }
   let(:builder) { FakeBuilder.new }
+  let(:user_collection) { User.all }
 
   describe 'basic usage' do
     it 'should render nicely when empty' do
@@ -60,15 +74,24 @@ RSpec.describe HtmlTables::DataTable do
     end
 
     it 'should translate values from enumerize' do
-      User.create(sex: :female)
-      collection = User.all
-      html = builder.data_table_for collection do |t|
+      html = builder.data_table_for user_collection do |t|
         t.column :sex
         t.nodata 'No records found'
       end
 
       expect(html).to have_tag :tbody do
         with_tag :td, text: 'Feminino'
+      end
+    end
+
+    it 'should translate values from symbolize' do
+      html = builder.data_table_for user_collection do |t|
+        t.column :role
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: 'Gerente'
       end
     end
   end
