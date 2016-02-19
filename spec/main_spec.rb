@@ -1,12 +1,6 @@
 require 'spec_helper'
 require 'ostruct'
 
-silence_warnings do
-  ActiveRecord::Migration.verbose = false
-  ActiveRecord::Base.logger = Logger.new(nil)
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
-end
-
 ActiveRecord::Base.connection.instance_eval do
   create_table :users do |t|
     t.string :sex
@@ -16,7 +10,6 @@ end
 
 class User < ActiveRecord::Base
   extend Enumerize
-  include Symbolize::ActiveRecord
 
   enumerize :sex, :in => [:male, :female]
   symbolize :role, :in => [:manager, :admin]
@@ -29,13 +22,6 @@ end
 RSpec.describe HtmlTables::DataTable do
 
   before do
-    I18n.config.enforce_available_locales = false
-    I18n.available_locales = ["pt"]
-    I18n.default_locale = :"pt"
-    I18n.backend.store_translations(:pt, :enumerize => { :user => { :sex => {
-        :female => 'Feminino', :male => 'Masculino'
-    } } },
-     :activerecord => { :symbolizes => { :user => { :role => { :manager => 'Gerente', :admin => 'Administrador' } } } })
     User.create(sex: :female, role: :manager)
   end
 

@@ -1,0 +1,12 @@
+pt:
+  activerecord:
+    symbolizes:
+      user:
+        role:
+          manager: Gerente
+          admin: Administrador
+  enumerize:
+    user:
+      sex:
+        male: Masculino
+        female: Feminino

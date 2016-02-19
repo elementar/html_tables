@@ -2,7 +2,19 @@ require 'html_tables'
 require 'rspec-html-matchers'
 require 'active_record'
 require 'enumerize'
-require 'symbolize/active_record'
+require 'symbolize'
+
+I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'locales', '*.{rb,yml}')]
+I18n.available_locales = ["pt"]
+I18n.default_locale = :"pt"
+
+ActiveRecord::Base.send :include, Symbolize::ActiveRecord
+
+silence_warnings do
+  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Base.logger = Logger.new(nil)
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
+end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
