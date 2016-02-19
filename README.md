@@ -1,5 +1,7 @@
 # html_tables
 
+[![Build Status](https://travis-ci.org/elementar/html_tables.svg?branch=master)](https://travis-ci.org/elementar/html_tables)
+
 This gem was extracted from some projects on my company. Everyone is welcome to use and improve upon.
 
 ## Installation
