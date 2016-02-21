@@ -21,4 +21,8 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'rspec-html-matchers'
+  gem.add_development_dependency 'symbolize'
+  gem.add_development_dependency 'enumerize'
+  gem.add_development_dependency 'activerecord', '~> 4.1.0'
+  gem.add_development_dependency 'sqlite3'
 end

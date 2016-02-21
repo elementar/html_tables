@@ -1,15 +1,35 @@
 require 'spec_helper'
 require 'ostruct'
 
+ActiveRecord::Base.connection.instance_eval do
+  create_table :users do |t|
+    t.string :sex
+    t.string :role
+  end
+end
+
+class User < ActiveRecord::Base
+  extend Enumerize
+
+  enumerize :sex, :in => [:male, :female]
+  symbolize :role, :in => [:manager, :admin]
+end
+
 class FakeBuilder < ActionView::Base
   include HtmlTables::DataTableHelper
 end
 
 RSpec.describe HtmlTables::DataTable do
+
+  before do
+    User.create(sex: :female, role: :manager)
+  end
+
   let(:col0) { [] }
   let(:col1) { [{ id: 1, name: 'Record One', enabled: true },
                 { id: 2, name: 'Record Two', enabled: false }].map &OpenStruct.method(:new) }
   let(:builder) { FakeBuilder.new }
+  let(:user_collection) { User.all }
 
   describe 'basic usage' do
     it 'should render nicely when empty' do
@@ -36,6 +56,41 @@ RSpec.describe HtmlTables::DataTable do
       expect(html).to have_tag :tbody do
         with_tag :tr, text: 'Record One'
         with_tag :tr, text: 'Record Two'
+      end
+    end
+
+    it 'should translate values from enumerize' do
+      html = builder.data_table_for user_collection do |t|
+        t.column :sex
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: 'Feminino'
+      end
+    end
+
+    it 'should show empty cell for empty enumerize field' do
+      user_collection.first.update(sex: nil)
+      updated_collection = user_collection
+      html = builder.data_table_for updated_collection do |t|
+        t.column :sex
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: ''
+      end
+    end
+
+    it 'should translate values from symbolize' do
+      html = builder.data_table_for user_collection do |t|
+        t.column :role
+        t.nodata 'No records found'
+      end
+
+      expect(html).to have_tag :tbody do
+        with_tag :td, text: 'Gerente'
       end
     end
   end

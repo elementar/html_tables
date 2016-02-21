@@ -138,6 +138,8 @@ module HtmlTables
           elsif item.class.respond_to?(:human_enum_name) # simple_enum
             tmp = item.class.human_enum_name(column, tmp)
           end
+        elsif tmp.class.name == 'Enumerize::Value' # enumerize
+          tmp = tmp.text
         end
         tmp
       end
